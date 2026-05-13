@@ -1,0 +1,1028 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Arla Fairy World — Tạo Avatar</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@400;500;600;700;800&display=swap');
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --bg: #0d0a14;
+    --surface: #13101e;
+    --border: rgba(255,255,255,0.10);
+    --text-primary: #f0ece8;
+    --text-secondary: rgba(240,236,232,0.55);
+    --gold: #c9a96e;
+    --gold-light: #e8d5a8;
+    --gold-glow: rgba(201,169,110,0.20);
+    --purple: #6b4fa0;
+    --radius: 18px;
+    --shadow-lg: 0 12px 56px rgba(0,0,0,0.55);
+  }
+
+  html, body {
+    min-height: 100%;
+    background: var(--bg);
+    font-family: 'Montserrat', sans-serif;
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+  }
+
+  /* ══════════════════════════════════════
+     STARS BACKGROUND
+  ══════════════════════════════════════ */
+  .stars {
+    position: fixed; inset: 0; z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .stars::before, .stars::after {
+    content: '';
+    position: absolute; inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 25% 40%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 40% 8%,  rgba(255,255,255,0.7) 0%, transparent 100%),
+      radial-gradient(1px 1px at 55% 55%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 70% 20%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 80% 70%, rgba(255,255,255,0.6) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 35%, rgba(255,255,255,0.4) 0%, transparent 100%),
+      radial-gradient(1px 1px at 15% 80%, rgba(255,255,255,0.3) 0%, transparent 100%),
+      radial-gradient(1px 1px at 60% 85%, rgba(255,255,255,0.5) 0%, transparent 100%),
+      radial-gradient(1px 1px at 35% 65%, rgba(255,255,255,0.3) 0%, transparent 100%);
+    background-size: 600px 600px;
+    animation: twinkle 5s ease-in-out infinite alternate;
+  }
+  .stars::after {
+    background-size: 800px 800px;
+    animation-delay: -2.5s;
+    opacity: 0.6;
+  }
+  @keyframes twinkle {
+    from { opacity: 0.4; }
+    to   { opacity: 1;   }
+  }
+
+  /* ══════════════════════════════════════
+     LANDING
+  ══════════════════════════════════════ */
+  #landing {
+    position: relative; z-index: 1;
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 36px 20px 52px;
+  }
+
+  /* Brand badge */
+  .brand-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(201,169,110,0.12);
+    border: 1px solid rgba(201,169,110,0.30);
+    border-radius: 32px;
+    padding: 6px 16px;
+    margin-bottom: 20px;
+  }
+  .brand-badge span {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--gold);
+  }
+
+  /* Main headline */
+  .landing-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(28px, 7vw, 48px);
+    font-weight: 700;
+    font-style: italic;
+    color: var(--gold-light);
+    text-align: center;
+    line-height: 1.15;
+    margin-bottom: 8px;
+    text-shadow: 0 0 40px rgba(201,169,110,0.35);
+    max-width: 480px;
+  }
+
+  /* Tagline */
+  .landing-tagline {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2.5px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  /* Description card */
+  .landing-desc {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px 20px;
+    max-width: 420px;
+    width: 100%;
+    margin-bottom: 28px;
+  }
+  .landing-desc p {
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    text-align: center;
+    font-style: italic;
+  }
+  .landing-desc .desc-items {
+    margin-top: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .landing-desc .desc-item {
+    font-size: 12.5px;
+    font-weight: 500;
+    color: rgba(240,236,232,0.70);
+    line-height: 1.6;
+    font-style: normal;
+  }
+  .landing-desc .desc-cta {
+    margin-top: 14px;
+    text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 15px;
+    font-weight: 600;
+    font-style: italic;
+    color: var(--gold);
+  }
+
+  /* Landing frame preview */
+  .landing-frame-wrap {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    aspect-ratio: 1/1;
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg), 0 0 0 1px rgba(201,169,110,0.15);
+    background: #1a1428;
+  }
+  #landingCanvas { display: block; width: 100%; height: 100%; }
+
+  /* Upload overlay */
+  .upload-overlay {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+  .upload-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 12px;
+    background: rgba(13,10,20,0.72);
+    border: 1.5px solid rgba(201,169,110,0.35);
+    border-radius: 20px;
+    padding: 26px 36px;
+    cursor: pointer; pointer-events: all;
+    transition: background .2s, border-color .2s, transform .15s;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .upload-btn:hover  { background: rgba(13,10,20,0.88); border-color: rgba(201,169,110,0.65); transform: scale(1.03); }
+  .upload-btn:active { transform: scale(0.98); }
+  .upload-icon {
+    width: 52px; height: 52px;
+    background: linear-gradient(135deg, #c9a96e, #8b6530);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 4px 20px rgba(201,169,110,0.40);
+  }
+  .upload-btn-label {
+    font-size: 14px; font-weight: 700; color: var(--gold-light);
+    white-space: nowrap; letter-spacing: 0.3px;
+  }
+  .upload-btn-hint {
+    font-size: 11px; color: var(--text-secondary); white-space: nowrap; letter-spacing: 0.5px;
+  }
+
+  .landing-hint {
+    margin-top: 16px; font-size: 11px; color: var(--text-secondary);
+    display: flex; align-items: center; gap: 8px;
+    flex-wrap: wrap; justify-content: center;
+  }
+  .dot { width: 2px; height: 2px; border-radius: 50%; background: var(--border); flex-shrink: 0; }
+
+  /* ══════════════════════════════════════
+     EDITOR
+  ══════════════════════════════════════ */
+  #editor {
+    position: relative; z-index: 1;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100svh;
+    padding: 20px 16px 48px;
+  }
+
+  /* Header */
+  .editor-header {
+    width: 100%; max-width: 520px;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 14px; gap: 8px;
+  }
+  .editor-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px; font-weight: 700; font-style: italic;
+    color: var(--gold-light); flex-shrink: 0;
+    letter-spacing: 0.2px;
+  }
+  .btn-sm {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 24px; padding: 7px 14px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px; font-weight: 600;
+    color: var(--text-secondary);
+    cursor: pointer; white-space: nowrap;
+    transition: border-color .2s, color .2s, background .2s;
+  }
+  .btn-sm:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-glow); }
+
+  /* Editor canvas */
+  .canvas-wrapper {
+    position: relative; width: 100%; max-width: 520px;
+    aspect-ratio: 1/1;
+    border-radius: var(--radius); overflow: hidden;
+    box-shadow: var(--shadow-lg), 0 0 0 1px rgba(201,169,110,0.12);
+    background: #1a1428; cursor: grab;
+  }
+  .canvas-wrapper:active { cursor: grabbing; }
+  #canvas {
+    display: block; width: 100%; height: 100%;
+    touch-action: pan-y;
+    user-select: none; -webkit-user-select: none;
+  }
+
+  /* Controls card */
+  .controls {
+    width: 100%; max-width: 520px;
+    margin-top: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 20px 18px;
+    box-shadow: 0 2px 24px rgba(0,0,0,0.25);
+  }
+  .control-row { display: flex; align-items: center; gap: 14px; }
+  .control-label {
+    font-size: 11px; font-weight: 700; letter-spacing: 0.8px;
+    text-transform: uppercase; color: var(--text-secondary);
+    white-space: nowrap; min-width: 60px;
+    display: flex; align-items: center; gap: 4px;
+  }
+  .slider {
+    flex: 1; -webkit-appearance: none; appearance: none;
+    height: 3px;
+    background: rgba(255,255,255,0.10);
+    border-radius: 3px; outline: none; cursor: pointer;
+  }
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: linear-gradient(135deg, #c9a96e, #8b6530);
+    border: 2px solid var(--bg);
+    box-shadow: 0 2px 8px rgba(201,169,110,0.40);
+    transition: transform .15s;
+  }
+  .slider::-webkit-slider-thumb:hover { transform: scale(1.15); }
+  .slider::-moz-range-thumb {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: linear-gradient(135deg, #c9a96e, #8b6530);
+    border: 2px solid var(--bg); cursor: pointer;
+  }
+  .zoom-value { font-size: 12px; font-weight: 700; min-width: 38px; text-align: right; color: var(--gold); }
+  .divider { height: 1px; background: var(--border); margin: 12px 0; }
+
+  .control-actions { display: flex; gap: 8px; }
+  .btn-action {
+    flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 10px; padding: 9px 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px; font-weight: 600;
+    color: var(--text-secondary); cursor: pointer;
+    transition: border-color .2s, color .2s, background .2s;
+  }
+  .btn-action:hover { border-color: var(--gold); color: var(--gold); background: var(--gold-glow); }
+
+  /* Download button */
+  .btn-download {
+    width: 100%; max-width: 520px; margin-top: 14px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    background: linear-gradient(135deg, #c9a96e 0%, #8b6530 100%);
+    color: #1a1000; border: none; border-radius: 56px;
+    padding: 17px 32px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px; font-weight: 800; letter-spacing: 0.8px;
+    cursor: pointer; text-transform: uppercase;
+    transition: opacity .2s, transform .15s, box-shadow .2s;
+    box-shadow: 0 4px 24px rgba(201,169,110,0.35);
+  }
+  .btn-download:hover  { opacity: 0.90; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(201,169,110,0.45); }
+  .btn-download:active { transform: translateY(0); }
+
+  /* ══════════════════════════════════════
+     LOADING OVERLAY
+  ══════════════════════════════════════ */
+  .loading-overlay {
+    position: absolute; inset: 0;
+    background: rgba(13,10,20,0.80);
+    display: flex; align-items: center; justify-content: center;
+    z-index: 10; opacity: 0; pointer-events: none; transition: opacity .3s;
+  }
+  .loading-overlay.visible { opacity: 1; pointer-events: all; }
+  .spinner {
+    width: 32px; height: 32px;
+    border: 2px solid rgba(201,169,110,0.20);
+    border-top-color: var(--gold);
+    border-radius: 50%;
+    animation: spin .7s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ══════════════════════════════════════
+     SAVE OVERLAY — full-screen
+  ══════════════════════════════════════ */
+  #saveOverlay {
+    position: fixed; inset: 0;
+    background: linear-gradient(160deg, #1a0e2e 0%, #0d0a14 60%, #0a1020 100%);
+    z-index: 200;
+    display: flex; flex-direction: column; align-items: center;
+    overflow-y: auto; overscroll-behavior: contain;
+    opacity: 0; pointer-events: none; transition: opacity .5s ease;
+  }
+  #saveOverlay.open { opacity: 1; pointer-events: all; }
+
+  .save-topbar {
+    width: 100%; max-width: 520px;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 20px 0; flex-shrink: 0;
+  }
+  .save-topbar-title {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 700; letter-spacing: 2px;
+    text-transform: uppercase; color: rgba(201,169,110,0.60);
+  }
+  .btn-edit-back {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: rgba(201,169,110,0.12);
+    border: 1px solid rgba(201,169,110,0.30);
+    border-radius: 24px; padding: 7px 16px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px; font-weight: 700; color: var(--gold);
+    cursor: pointer; white-space: nowrap;
+    transition: background .2s, border-color .2s;
+  }
+  .btn-edit-back:hover  { background: rgba(201,169,110,0.22); border-color: rgba(201,169,110,0.55); }
+  .btn-edit-back:active { transform: scale(0.97); }
+
+  .save-headline {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(24px, 7vw, 36px); font-weight: 700; font-style: italic;
+    color: var(--gold-light); text-align: center; line-height: 1.2;
+    padding: 22px 24px 0; max-width: 480px; flex-shrink: 0;
+    text-shadow: 0 0 40px rgba(201,169,110,0.30);
+  }
+  .save-headline span {
+    display: block; font-family: 'Montserrat', sans-serif;
+    font-size: 0.40em; font-weight: 500; font-style: normal;
+    color: var(--text-secondary); margin-top: 6px; letter-spacing: 0.3px;
+  }
+
+  .save-img-wrap {
+    width: calc(100% - 32px); max-width: 380px;
+    margin-top: 22px; border-radius: 20px; overflow: hidden;
+    box-shadow: 0 20px 64px rgba(0,0,0,0.60), 0 0 0 1px rgba(201,169,110,0.20);
+    background: #1a1428; flex-shrink: 0; transition: transform .2s;
+  }
+  .save-img-wrap:active { transform: scale(0.99); }
+  .save-img-wrap img {
+    display: block; width: 100%; height: auto;
+    -webkit-touch-callout: default; cursor: pointer;
+  }
+
+  .save-press-badge {
+    margin-top: 14px; flex-shrink: 0;
+    background: rgba(201,169,110,0.14);
+    border: 1px solid rgba(201,169,110,0.30);
+    border-radius: 30px; padding: 7px 18px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px; font-weight: 700; color: var(--gold);
+    letter-spacing: 0.5px; text-transform: uppercase;
+    display: flex; align-items: center; gap: 6px;
+    animation: pulse-badge 2.2s ease-in-out infinite;
+  }
+  @keyframes pulse-badge {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.75; transform: scale(1.04); }
+  }
+
+  .save-instruction {
+    width: calc(100% - 32px); max-width: 380px;
+    margin-top: 14px; flex-shrink: 0;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 16px 18px;
+  }
+  .save-instruction p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13.5px; font-weight: 500; color: var(--text-secondary);
+    line-height: 1.75; text-align: center;
+  }
+  .save-instruction strong {
+    font-weight: 700; color: var(--gold-light);
+    background: rgba(201,169,110,0.12);
+    padding: 1px 7px; border-radius: 4px;
+  }
+
+  .btn-edit-big {
+    width: calc(100% - 32px); max-width: 380px;
+    margin-top: 14px; flex-shrink: 0;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    background: rgba(201,169,110,0.10);
+    border: 1.5px solid rgba(201,169,110,0.30);
+    border-radius: 56px; padding: 15px 28px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px; font-weight: 700; letter-spacing: 0.8px;
+    color: var(--gold); cursor: pointer; text-transform: uppercase;
+    transition: background .2s, border-color .2s, transform .15s;
+  }
+  .btn-edit-big:hover  { background: rgba(201,169,110,0.20); border-color: rgba(201,169,110,0.55); }
+  .btn-edit-big:active { transform: scale(0.98); }
+
+  .btn-direct-dl {
+    display: inline-flex; align-items: center; justify-content: center; gap: 7px;
+    background: transparent; border: none; padding: 10px 16px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px; font-weight: 500; color: rgba(240,236,232,0.35);
+    cursor: pointer; text-decoration: underline; text-underline-offset: 3px;
+    margin-top: 4px; margin-bottom: 40px; flex-shrink: 0; transition: color .2s;
+  }
+  .btn-direct-dl:hover { color: var(--text-secondary); }
+
+  /* ══════════════════════════════════════
+     TOAST
+  ══════════════════════════════════════ */
+  .toast {
+    position: fixed; bottom: 28px; left: 50%;
+    transform: translateX(-50%) translateY(16px);
+    background: rgba(13,10,20,0.95);
+    border: 1px solid rgba(201,169,110,0.25);
+    color: var(--gold-light);
+    font-size: 13px; font-weight: 500;
+    padding: 11px 22px; border-radius: 32px;
+    opacity: 0; pointer-events: none;
+    transition: opacity .3s, transform .3s;
+    white-space: nowrap; z-index: 300;
+    backdrop-filter: blur(10px);
+  }
+  .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  #fileInput { display: none; }
+
+  @media (max-width: 380px) {
+    .landing-desc { padding: 14px 16px; }
+    .upload-btn { padding: 20px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<!-- ══════════════════════════════════════
+     LANDING
+══════════════════════════════════════ -->
+<div id="landing">
+
+  <div class="brand-badge">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#c9a96e" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+    </svg>
+    <span>Arla Fairy World</span>
+  </div>
+
+  <h1 class="landing-headline">Fairy World<br>Is About To Open…</h1>
+  <p class="landing-tagline">✨ Tạo Avatar Bước Vào Thế Giới Cổ Tích ✨</p>
+
+  <div class="landing-desc">
+    <p>Có một khu rừng cổ tích Bắc Âu sắp xuất hiện giữa lòng thành phố…<br>
+    Nơi ánh sáng fairy light lấp lánh dẫn lối,<br>
+    Nơi những điều kỳ diệu được nuôi dưỡng từ sự tinh khiết nhất.</p>
+    <p class="desc-cta">🌙 Bước vào thế giới cổ tích của Arla </p>
+  </div>
+
+  <div class="landing-frame-wrap">
+    <canvas id="landingCanvas"></canvas>
+    <div class="upload-overlay" id="uploadOverlay">
+      <button class="upload-btn" onclick="document.getElementById('fileInput').click()">
+        <div class="upload-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1a1000" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 16 12 12 8 16"/>
+            <line x1="12" y1="12" x2="12" y2="21"/>
+            <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+          </svg>
+        </div>
+        <span class="upload-btn-label">✨ Chọn ảnh của bạn</span>
+        <span class="upload-btn-hint">PNG · JPG · WEBP</span>
+      </button>
+    </div>
+    <div class="loading-overlay" id="landingLoading"><div class="spinner"></div></div>
+  </div>
+
+  <p class="landing-hint">
+
+  </p>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     EDITOR
+══════════════════════════════════════ -->
+<div id="editor">
+
+  <div class="editor-header">
+    <span class="editor-title">✦ Chỉnh ảnh của bạn</span>
+    <button class="btn-sm" onclick="document.getElementById('fileInput').click()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="3"/>
+        <circle cx="8.5" cy="8.5" r="1.5"/>
+        <polyline points="21 15 16 10 5 21"/>
+      </svg>
+      Chọn ảnh khác
+    </button>
+  </div>
+
+  <div class="canvas-wrapper" id="canvasWrapper">
+    <canvas id="canvas"></canvas>
+    <div class="loading-overlay" id="editorLoading"><div class="spinner"></div></div>
+  </div>
+
+  <!-- Controls -->
+  <div class="controls">
+    <div class="control-row">
+      <span class="control-label">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          <line x1="11" y1="8" x2="11" y2="14"/><line x1="8" y1="11" x2="14" y2="11"/>
+        </svg>
+        Zoom
+      </span>
+      <input type="range" id="zoomSlider" class="slider" min="100" max="150" value="100" oninput="onZoomSlider(this.value)">
+      <span class="zoom-value" id="zoomValue">100%</span>
+    </div>
+    <div class="divider"></div>
+    <div class="control-actions">
+      <button class="btn-action" onclick="resetPosition()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-4.95"/>
+        </svg>
+        Đặt lại vị trí
+      </button>
+      <button class="btn-action" onclick="document.getElementById('fileInput').click()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="16 16 12 12 8 16"/>
+          <line x1="12" y1="12" x2="12" y2="21"/>
+          <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3"/>
+        </svg>
+        Chọn ảnh khác
+      </button>
+    </div>
+  </div>
+
+  <button class="btn-download" onclick="openSaveModal()">
+    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+      <polyline points="7 10 12 15 17 10"/>
+      <line x1="12" y1="15" x2="12" y2="3"/>
+    </svg>
+    ✨ Lưu Avatar & Bước Vào Fairy World
+  </button>
+
+</div>
+
+<!-- ══════════════════════════════════════
+     SAVE OVERLAY
+══════════════════════════════════════ -->
+<div id="saveOverlay">
+
+  <div class="save-topbar">
+    <span class="save-topbar-title">✦ Kết quả</span>
+    <button class="btn-edit-back" onclick="closeOverlay()">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="15 18 9 12 15 6"/>
+      </svg>
+      Chỉnh sửa lại
+    </button>
+  </div>
+
+  <h2 class="save-headline">
+    Welcome to<br>Fairy World ✨
+    <span>Avatar của bạn đã sẵn sàng tỏa sáng!</span>
+  </h2>
+
+  <div class="save-img-wrap">
+    <img id="saveResultImg" src="" alt="Avatar Arla Fairy World">
+  </div>
+
+  <div class="save-press-badge">
+    👆 Nhấn giữ ảnh 2 giây để lưu
+  </div>
+
+  <div class="save-instruction">
+    <p>
+      Nhấn giữ vào ảnh khoảng <strong>2 giây</strong>,
+      sau đó chọn <strong>"Lưu vào ảnh"</strong> (iOS) hoặc
+      <strong>"Tải hình ảnh xuống"</strong> (Android).<br>
+      Hãy cập nhật avatar và cùng chào đón Arla Fairy World nhé! 🌙
+    </p>
+  </div>
+
+  <button class="btn-edit-big" onclick="closeOverlay()">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/>
+      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/>
+    </svg>
+    Chỉnh sửa lại vị trí ảnh
+  </button>
+
+  <a id="directDownloadLink" class="btn-direct-dl" download="arla-fairy-world-avatar.png">
+    ↓ Tải file trực tiếp (Android / PC)
+  </a>
+
+</div>
+
+<div class="toast" id="toast"></div>
+<input type="file" id="fileInput" accept="image/*" onchange="handleFileSelect(this)">
+
+<script>
+// ══════════════════════════════════════
+//  FRAME CONFIG  (single square frame)
+// ══════════════════════════════════════
+const FRAME_SRC    = 'frame.png';
+const FRAME_W      = 1500;   // native frame width  (px)
+const FRAME_H      = 1500;   // native frame height (px)
+
+// Photo zone — asymmetric vertical offsets
+// Left/Right margin: 94px | Top margin: 58px | Bottom margin: 258px
+const OFF_X        = 94;
+const OFF_Y_TOP    = 58;
+const OFF_Y_BOT    = 258;
+const ZONE_W       = FRAME_W - OFF_X * 2;              // = 1312
+const ZONE_H       = FRAME_H - OFF_Y_TOP - OFF_Y_BOT;  // = 1184
+
+// Display canvas logical size (square, same aspect as frame)
+const CW = 520;
+const CH = 520;
+
+// Scale factor native → display
+const SX = CW / FRAME_W;   // ≈ 0.3467
+const SY = CH / FRAME_H;   // ≈ 0.3467
+
+// Display-space zone coordinates
+const D_ZONE_W = ZONE_W    * SX;  // ≈ 454.83
+const D_ZONE_H = ZONE_H    * SY;  // ≈ 410.45
+const D_OFF_X  = OFF_X     * SX;  // ≈  32.59
+const D_OFF_Y  = OFF_Y_TOP * SY;  // ≈  20.11
+
+// ══════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════
+let userImg   = null;
+let frameImg  = null;
+let imgState  = { x: 0, y: 0, baseScale: 1, zoom: 1 };
+let drag      = { active: false, startX: 0, startY: 0, imgX: 0, imgY: 0 };
+let isInEditor = false;
+
+// ══════════════════════════════════════
+//  CANVAS ELEMENTS
+// ══════════════════════════════════════
+const canvas = document.getElementById('canvas');
+const ctx    = canvas.getContext('2d');
+canvas.width  = CW;
+canvas.height = CH;
+
+const lCanvas = document.getElementById('landingCanvas');
+const lCtx    = lCanvas.getContext('2d');
+
+// ══════════════════════════════════════
+//  FRAME PRELOAD
+// ══════════════════════════════════════
+(function preloadFrame() {
+  const img       = new Image();
+  img.crossOrigin = 'anonymous';
+  img.onload  = () => { frameImg = img; drawLanding(); };
+  img.onerror = () => { frameImg = null; };
+  img.src = FRAME_SRC;
+})();
+
+function sizeLandingCanvas() {
+  const rect = lCanvas.parentElement.getBoundingClientRect();
+  const px   = Math.round(rect.width) || 380;
+  if (lCanvas.width !== px || lCanvas.height !== px) {
+    lCanvas.width  = px;
+    lCanvas.height = px;
+  }
+}
+
+function drawLanding() {
+  sizeLandingCanvas();
+  lCtx.clearRect(0, 0, lCanvas.width, lCanvas.height);
+  if (frameImg) lCtx.drawImage(frameImg, 0, 0, lCanvas.width, lCanvas.height);
+}
+
+// ══════════════════════════════════════
+//  FILE SELECT
+// ══════════════════════════════════════
+function handleFileSelect(input) {
+  if (!input.files || !input.files[0]) return;
+  const file = input.files[0];
+  if (!file.type.startsWith('image/')) { showToast('Vui lòng chọn file ảnh hợp lệ.'); return; }
+
+  if (isInEditor) {
+    document.getElementById('editorLoading').classList.add('visible');
+  } else {
+    document.getElementById('landingLoading').classList.add('visible');
+    document.getElementById('uploadOverlay').style.display = 'none';
+  }
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    const img  = new Image();
+    img.onload = () => {
+      userImg = img;
+      initImageState();
+      if (!isInEditor) showEditor();
+      document.getElementById('editorLoading').classList.remove('visible');
+      document.getElementById('landingLoading').classList.remove('visible');
+    };
+    img.onerror = () => {
+      showToast('Không thể đọc ảnh. Hãy thử lại.');
+      document.getElementById('editorLoading').classList.remove('visible');
+      document.getElementById('landingLoading').classList.remove('visible');
+      document.getElementById('uploadOverlay').style.display = 'flex';
+    };
+    img.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  input.value = '';
+}
+
+// ══════════════════════════════════════
+//  INIT IMAGE STATE  — Smart Cover-Fit to Zone
+// ══════════════════════════════════════
+// baseScale = max(D_ZONE_W / imgW, D_ZONE_H / imgH)
+// Shorter side fills zone exactly; longer side overflows — no gaps.
+function initImageState() {
+  const baseScale    = Math.max(D_ZONE_W / userImg.width, D_ZONE_H / userImg.height);
+  imgState.baseScale = baseScale;
+  imgState.zoom      = 1;
+
+  // Center on zone
+  const zoneCX = D_OFF_X + D_ZONE_W / 2;
+  const zoneCY = D_OFF_Y + D_ZONE_H / 2;
+  imgState.x = zoneCX - (userImg.width  * baseScale) / 2;
+  imgState.y = zoneCY - (userImg.height * baseScale) / 2;
+
+  document.getElementById('zoomSlider').value = 100;
+  document.getElementById('zoomValue').textContent = '100%';
+  draw();
+}
+
+// ══════════════════════════════════════
+//  DRAW
+// ══════════════════════════════════════
+function draw() {
+  ctx.clearRect(0, 0, CW, CH);
+  if (userImg) {
+    const sc = imgState.baseScale * imgState.zoom;
+    ctx.drawImage(userImg, imgState.x, imgState.y, userImg.width * sc, userImg.height * sc);
+  }
+  if (frameImg) ctx.drawImage(frameImg, 0, 0, CW, CH);
+}
+
+// ══════════════════════════════════════
+//  ZOOM  (100 – 150 → 1.00 – 1.50)
+// ══════════════════════════════════════
+function onZoomSlider(val) {
+  const pct     = parseInt(val);
+  const newZoom = pct / 100;
+  document.getElementById('zoomValue').textContent = pct + '%';
+
+  const oldSc = imgState.baseScale * imgState.zoom;
+  imgState.zoom = newZoom;
+  const newSc = imgState.baseScale * imgState.zoom;
+
+  // Anchor to zone center
+  const zoneCX = D_OFF_X + D_ZONE_W / 2;
+  const zoneCY = D_OFF_Y + D_ZONE_H / 2;
+  imgState.x = zoneCX - (zoneCX - imgState.x) * (newSc / oldSc);
+  imgState.y = zoneCY - (zoneCY - imgState.y) * (newSc / oldSc);
+
+  clampPosition();
+  draw();
+}
+
+// ══════════════════════════════════════
+//  CLAMP — image must fully cover the zone
+// ══════════════════════════════════════
+function clampPosition() {
+  if (!userImg) return;
+  const sc = imgState.baseScale * imgState.zoom;
+  const w  = userImg.width  * sc;
+  const h  = userImg.height * sc;
+
+  imgState.x = Math.min(imgState.x, D_OFF_X);           // left  ≤ zone left
+  imgState.x = Math.max(imgState.x, D_OFF_X + D_ZONE_W - w); // right  ≥ zone right
+  imgState.y = Math.min(imgState.y, D_OFF_Y);           // top   ≤ zone top
+  imgState.y = Math.max(imgState.y, D_OFF_Y + D_ZONE_H - h); // bottom ≥ zone bottom
+}
+
+// ══════════════════════════════════════
+//  RESET
+// ══════════════════════════════════════
+function resetPosition() {
+  if (!userImg) return;
+  imgState.zoom = 1;
+  const zoneCX = D_OFF_X + D_ZONE_W / 2;
+  const zoneCY = D_OFF_Y + D_ZONE_H / 2;
+  imgState.x = zoneCX - (userImg.width  * imgState.baseScale) / 2;
+  imgState.y = zoneCY - (userImg.height * imgState.baseScale) / 2;
+  document.getElementById('zoomSlider').value = 100;
+  document.getElementById('zoomValue').textContent = '100%';
+  draw();
+}
+
+// ══════════════════════════════════════
+//  COORDINATE HELPERS
+// ══════════════════════════════════════
+function clientToCanvas(cx, cy) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: (cx - rect.left) * (CW / rect.width),
+    y: (cy - rect.top)  * (CH / rect.height),
+  };
+}
+
+// Returns true when (px, py) is inside the photo zone (not the frame border)
+function isInsideZone(px, py) {
+  return (
+    px >= D_OFF_X && px <= D_OFF_X + D_ZONE_W &&
+    py >= D_OFF_Y && py <= D_OFF_Y + D_ZONE_H
+  );
+}
+
+// ══════════════════════════════════════
+//  DRAG — MOUSE
+// ══════════════════════════════════════
+canvas.addEventListener('mousedown', e => {
+  const pt = clientToCanvas(e.clientX, e.clientY);
+  if (!isInsideZone(pt.x, pt.y)) return;  // frame border → ignore
+  e.preventDefault();
+  startDrag(pt);
+});
+window.addEventListener('mousemove', e => { if (drag.active) moveDrag(e.clientX, e.clientY); });
+window.addEventListener('mouseup',   () => { drag.active = false; });
+
+// ══════════════════════════════════════
+//  DRAG — TOUCH
+// ══════════════════════════════════════
+canvas.addEventListener('touchstart', e => {
+  if (e.touches.length !== 1) return;
+  const pt = clientToCanvas(e.touches[0].clientX, e.touches[0].clientY);
+  if (!isInsideZone(pt.x, pt.y)) return;  // frame border → browser scrolls
+  e.preventDefault();
+  startDrag(pt);
+}, { passive: false });
+
+canvas.addEventListener('touchmove', e => {
+  if (!drag.active) return;
+  e.preventDefault();
+  if (e.touches.length === 1) moveDrag(e.touches[0].clientX, e.touches[0].clientY);
+}, { passive: false });
+
+canvas.addEventListener('touchend',    () => { drag.active = false; });
+canvas.addEventListener('touchcancel', () => { drag.active = false; });
+
+function startDrag(pt) {
+  drag.active = true;
+  drag.startX = pt.x; drag.startY = pt.y;
+  drag.imgX   = imgState.x; drag.imgY = imgState.y;
+}
+function moveDrag(cx, cy) {
+  const pt   = clientToCanvas(cx, cy);
+  imgState.x = drag.imgX + (pt.x - drag.startX);
+  imgState.y = drag.imgY + (pt.y - drag.startY);
+  clampPosition();
+  draw();
+}
+
+// ══════════════════════════════════════
+//  EXPORT  (1500×1500)
+// ══════════════════════════════════════
+function renderExport() {
+  const off    = document.createElement('canvas');
+  off.width    = FRAME_W;
+  off.height   = FRAME_H;
+  const offCtx = off.getContext('2d');
+  const ratioX = FRAME_W / CW;
+  const ratioY = FRAME_H / CH;
+  const sc     = imgState.baseScale * imgState.zoom;
+  offCtx.drawImage(
+    userImg,
+    imgState.x * ratioX,
+    imgState.y * ratioY,
+    userImg.width  * sc * ratioX,
+    userImg.height * sc * ratioY
+  );
+  return off;
+}
+
+// ══════════════════════════════════════
+//  SAVE OVERLAY
+// ══════════════════════════════════════
+function openSaveModal() {
+  if (!userImg) { showToast('Chưa có ảnh để xuất.'); return; }
+  showToast('Đang tạo ảnh…');
+
+  const finalize = (fImage) => {
+    try {
+      const off    = renderExport();
+      const offCtx = off.getContext('2d');
+      if (fImage) offCtx.drawImage(fImage, 0, 0, FRAME_W, FRAME_H);
+
+      const dataURL = off.toDataURL('image/png');
+      document.getElementById('saveResultImg').src       = dataURL;
+      document.getElementById('directDownloadLink').href = dataURL;
+
+      const overlay = document.getElementById('saveOverlay');
+      overlay.classList.add('open');
+      overlay.scrollTop = 0;
+    } catch (err) {
+      showToast('Lỗi: canvas bị tainted. Hãy dùng local server.');
+      console.error(err);
+    }
+  };
+
+  if (frameImg) {
+    finalize(frameImg);
+  } else {
+    const fImg       = new Image();
+    fImg.crossOrigin = 'anonymous';
+    fImg.onload  = () => finalize(fImg);
+    fImg.onerror = () => finalize(null);
+    fImg.src = FRAME_SRC + '?t=' + Date.now();
+  }
+}
+
+function closeOverlay() {
+  document.getElementById('saveOverlay').classList.remove('open');
+  setTimeout(() => { document.getElementById('saveResultImg').src = ''; }, 600);
+}
+
+// ══════════════════════════════════════
+//  UI
+// ══════════════════════════════════════
+function showEditor() {
+  isInEditor = true;
+  document.getElementById('landing').style.display = 'none';
+  const ed = document.getElementById('editor');
+  ed.style.display = 'flex'; ed.style.opacity = 0;
+  requestAnimationFrame(() => {
+    ed.style.transition = 'opacity .4s ease';
+    ed.style.opacity    = 1;
+  });
+}
+
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+window.addEventListener('load', drawLanding);
+</script>
+</body>
+</html>
